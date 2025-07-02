@@ -7,7 +7,7 @@ h1 {
     text-align: center;
 }
 
-.get-user-button {
+.get-person-button {
     border: none;
     border-radius: 5px;
     line-height: 30px;
@@ -24,7 +24,7 @@ h1 {
     justify-items: center;
 }
 
-.user-div {
+.person-div {
     border-radius: 10px;
     background-color: #fea7;
     padding: 20px;

@@ -2,16 +2,38 @@ function randomPeoples(containerId) {
   const container = document.querySelector(containerId);
 
   const title = document.createElement("h1");
-  title.textContent = "StarWars Users";
+  title.textContent = "StarWars Peoples";
 
   const button = document.createElement("button");
-  button.classList.add('get-user-button');
-  button.textContent = "Get User";
+  button.classList.add("get-person-button");
+  button.textContent = "Get Person";
 
   let url = "https://swapi.tech/api/people/";
-  
+
+  const memo = {}
+
+  function getPerson(properties) {
+    const personDiv = document.createElement("div");
+    personDiv.innerHTML = `<strong>Name:</strong> ${properties.name} <br> 
+                          <strong>Hair color:</strong> ${properties.hair_color}<br>
+                          <strong>Hender:</strong> ${properties.gender}<br>
+                          <strong>Height:</strong> ${properties.height}<br>
+                          <strong>Eye color:</strong> ${properties.eye_color}<br>`
+    personDiv.classList.add("person-div");
+    container.innerHTML = "";
+    container.append(personDiv);
+    console.log(properties);
+  }
+
   button.addEventListener("click", (ev) => {
-    let randomUrl = url.concat(Math.floor(Math.random() * 82) + 1);
+    let randomId =(Math.floor(Math.random() * 82) + 1);
+
+    if (memo[randomId]) {
+      getPerson(memo[randomId]);
+      return;
+    }
+
+    const randomUrl = url.concat(randomId);
     fetch(randomUrl)
       .then((res) => {
         if (!res.ok) {
@@ -19,23 +41,14 @@ function randomPeoples(containerId) {
         }
         return res.json();
       })
-      .then((users) => {
-        const user = document.createElement('div');
-        user.innerHTML = `<strong>Name:</strong> ${users.result.properties.name} <br> 
-                          <strong>Hair color:</strong> ${users.result.properties.hair_color}<br>
-                          <strong>Hender:</strong> ${users.result.properties.gender}<br>
-                          <strong>Height:</strong> ${users.result.properties.height}<br>
-                          <strong>Uid:</strong> ${users.result.uid}<br>
-                          <strong>Description:</strong> ${users.result.description}<br>`;
-        user.classList.add('user-div');
-        container.append(user);
+      .then((data) => {
+        memo[randomId] = data.result.properties;
+        getPerson(memo[randomId]);
         console.log(`Se obtubo el usuario de la url ${randomUrl}`);
-        console.log(users)
       })
       .catch((err) => {
         console.log(err.message);
       });
-      
   });
 
   container.before(title);
